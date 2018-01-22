@@ -16,6 +16,10 @@ public class Config extends ConfigBase
     public int biomassAbilityChance = 5;
 
     @ConfigProp(category = "clientOnly", side = Side.CLIENT)
+    @IntMinMax(min = 1)
+    public int firstPersonBiomassAbsorptionAlphaCount = 8;
+
+    @ConfigProp(category = "clientOnly", side = Side.CLIENT)
     @IntMinMax(min = 0, max = 1)
     public int renderBiomassInfo = 1;
 
@@ -25,7 +29,7 @@ public class Config extends ConfigBase
 
     @ConfigProp(category = "clientOnly", side = Side.CLIENT)
     @IntMinMax(min = 0)
-    public int biomassBarCriticalMassPulsationTime = 40;
+    public int guiCriticalMassPulsationTime = 40;
 
     public Config(File file)
     {

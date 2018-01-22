@@ -37,6 +37,10 @@ public class BiomassDataClient extends BiomassData
     public int updateTime;
     public boolean shown;
 
+    public float shownBiomass;
+    public float shownMax;
+    public float shownCrit;
+
     public BiomassDataClient()
     {
         super();
@@ -49,6 +53,33 @@ public class BiomassDataClient extends BiomassData
         {
             shown = true;
         }
+
+        if(Biomass.config.biomassBarShowOnUpdate == 1 && (Math.abs(currentBiomass - shownBiomass) > 1F || Math.abs(maxBiomass - shownMax) > 1F || Math.abs(criticalMassMultiplier - shownCrit) > 1F) && updateTime > 20)
+        {
+            updateTime = 20;
+        }
+
+        float amp = 0.3F;
+        shownBiomass += (currentBiomass - shownBiomass) * amp;
+        shownMax += (maxBiomass - shownMax) * amp;
+        shownCrit += (criticalMassMultiplier - shownCrit) * amp;
+    }
+
+    @Override
+    public void setBiomass(float current, float max, float criticalMult)
+    {
+        updateTime = 0;
+        super.setBiomass(current, max, criticalMult);
+    }
+
+    public float getMaxBiomassRender()
+    {
+        return Math.min(shownMax * shownCrit, MAX_BIOMASS);
+    }
+
+    public boolean shouldNotShowBar() //TODO do not render if spectating?
+    {
+        return Biomass.config.renderBiomassInfo == 0 || Biomass.config.biomassBarShowOnUpdate == 1 && updateTime >= 70/* || !Minecraft.getMinecraft().playerController.gameIsSurvivalOrAdventure()*/;//TODO uncomment this
     }
 
     public void doPreRender(RenderGameOverlayEvent event)
@@ -56,7 +87,7 @@ public class BiomassDataClient extends BiomassData
         if(!preRenderDone)
         {
             preRenderDone = true;
-            if(Biomass.config.renderBiomassInfo == 0 || Biomass.config.biomassBarShowOnUpdate == 1 && updateTime >= 70)
+            if(shouldNotShowBar())
             {
                 return;
             }
@@ -80,7 +111,7 @@ public class BiomassDataClient extends BiomassData
 
         Minecraft mc = Minecraft.getMinecraft();
 
-        if(Biomass.config.renderBiomassInfo == 0 || Biomass.config.biomassBarShowOnUpdate == 1 && updateTime >= 70)
+        if(shouldNotShowBar())
         {
             return;
         }
@@ -138,20 +169,20 @@ public class BiomassDataClient extends BiomassData
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, alpha);
         mc.ingameGUI.drawTexturedModalRect(left, top, 0, 64, barWidth, 5);
-        if(currentBiomass > 0)
+        if(shownBiomass > 0)
         {
             GlStateManager.color(0.8F, 0.8F, 0.8F, alpha);
-            float totalRender = currentBiomass / getMaxBiomass();
-            float criticalMassRender = maxBiomass / getMaxBiomass();
+            float totalRender = shownBiomass / getMaxBiomassRender();
+            float criticalMassRender = shownMax / getMaxBiomassRender();
             if(totalRender > criticalMassRender) //needs to render critical mass;
             {
                 int normDraw = (int)(criticalMassRender * barWidth);
                 mc.ingameGUI.drawTexturedModalRect(left, top, 0, 69, normDraw, 5);
 
                 float red = 0.6F;
-                if(Biomass.config.biomassBarCriticalMassPulsationTime > 0)
+                if(Biomass.config.guiCriticalMassPulsationTime > 0)
                 {
-                    red += 0.2F * (float)Math.sin(Math.toRadians(((iChunUtil.eventHandlerClient.ticks + event.getPartialTicks()) / (float)Biomass.config.biomassBarCriticalMassPulsationTime) * 180F));
+                    red += 0.2F * (float)Math.sin(Math.toRadians(((iChunUtil.eventHandlerClient.ticks + event.getPartialTicks()) / (float)Biomass.config.guiCriticalMassPulsationTime) * 180F));
                 }
                 GlStateManager.color(red, 0.0F, 0.0F, alpha);
                 mc.ingameGUI.drawTexturedModalRect(left + normDraw, top, normDraw, 69, (int)((totalRender - criticalMassRender) * barWidth), 5);

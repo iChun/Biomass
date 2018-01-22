@@ -1,2 +1,11 @@
 biomass.config.prop.biomassAbilityChance.name=Biomass Ability Chance
 biomass.config.prop.biomassAbilityChance.comment=What are the chances of the player getting the biomass ability on a wither attack (out of 100%).\nSet to -1 to give the player the ability on login.
+
+biomass.config.prop.firstPersonBiomassAbsorptionAlphaCount.name=First Person Biomass Absorption Alpha (Count)
+biomass.config.prop.firstPersonBiomassAbsorptionAlphaCount.comment=How many parts should the alpha be applied to in the first person biomass absorption animation? The higher, the more parts are transparent.\nPut this to a ridiculously high value almost never see the tendrils in first person.
+biomass.config.prop.renderBiomassInfo.name=Show Biomass info in GUI?
+biomass.config.prop.renderBiomassInfo.comment=Show your biomass information in the GUI?\n0 = Off\n1 = Under the XP bar (Biomass Bar)
+biomass.config.prop.biomassBarShowOnUpdate.name=Biomass Bar - Show Only On Update?
+biomass.config.prop.biomassBarShowOnUpdate.comment=Only show the biomass bar when there is an update to biomass?
+biomass.config.prop.guiCriticalMassPulsationTime.name=GUI - Critical Mass Pulsation Time
+biomass.config.prop.guiCriticalMassPulsationTime.comment=How fast (in ticks) should the critical mass for the biomass bar pulsate?\nSet to 0 to turn off

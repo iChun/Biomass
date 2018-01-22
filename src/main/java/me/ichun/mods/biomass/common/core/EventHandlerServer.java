@@ -2,6 +2,7 @@ package me.ichun.mods.biomass.common.core;
 
 import me.ichun.mods.biomass.common.Biomass;
 import me.ichun.mods.biomass.common.biomass.BiomassData;
+import me.ichun.mods.biomass.common.packet.PacketBiomassAbsorptionEffect;
 import me.ichun.mods.biomass.common.packet.PacketBiomassData;
 import me.ichun.mods.biomass.common.packet.PacketUnlockBiomassAbility;
 import me.ichun.mods.ichunutil.common.core.util.EntityHelper;
@@ -14,6 +15,7 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.util.HashMap;
 
@@ -36,6 +38,8 @@ public class EventHandlerServer
                 if(data != null)
                 {
                     data.setBiomass(0F, data.maxBiomass, data.criticalMassMultiplier);
+                    //TODO spawn the mob
+                    savePlayerData(player);
                 }
             }
             if(event.getSource().getTrueSource() instanceof EntityPlayerMP && event.getEntityLiving() != event.getSource().getTrueSource())
@@ -43,11 +47,11 @@ public class EventHandlerServer
                 //Absorb biomass
                 EntityPlayerMP player = (EntityPlayerMP)event.getSource().getTrueSource();
                 BiomassData data = playerBiomass.get(player.getName());
-                if(data != null)
+                if(data != null && event.getEntityLiving().getDistance(event.getSource().getTrueSource()) < 8D && data.addBiomass(BiomassData.calculateBiomass(event.getEntityLiving()))) //TODO reach
                 {
-                    //TODO send packet to play biomass absorption effect.
-                    data.addBiomass(BiomassData.calculateBiomass(event.getEntityLiving()));
+                    Biomass.channel.sendToAllAround(new PacketBiomassAbsorptionEffect(event.getEntityLiving().getEntityId(), player.getEntityId()), new NetworkRegistry.TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 128D));
                     data.updateBiomass(player);
+                    savePlayerData(player);
                 }
             }
         }

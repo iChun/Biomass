@@ -5,9 +5,12 @@ import me.ichun.mods.biomass.common.packet.PacketBiomassAmount;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 
 public class BiomassData
 {
+    public static final ResourceLocation BIOMASS_SKIN = new ResourceLocation("biomass", "textures/skin/biomass.png");
+
     public static final float MAX_BIOMASS = 999999999999F; //max = 1 quadrillion cm3
 
     public float currentBiomass;
@@ -43,13 +46,18 @@ public class BiomassData
         criticalMassMultiplier = Math.min(1.0F, criticalMult);
     }
 
-    public void addBiomass(float amount)
+    public boolean addBiomass(float amount)
     {
+        if(currentBiomass == getMaxBiomass() && amount >= 0)
+        {
+            return true; //TODO return false
+        }
         currentBiomass += amount;
         if(currentBiomass > getMaxBiomass())
         {
             currentBiomass = getMaxBiomass();
         }
+        return true;
     }
 
     public float getMaxBiomass()

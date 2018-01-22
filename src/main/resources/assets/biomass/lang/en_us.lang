@@ -1,0 +1,2 @@
+biomass.config.prop.biomassAbilityChance.name=Biomass Ability Chance
+biomass.config.prop.biomassAbilityChance.comment=What are the chances of the player getting the biomass ability on a wither attack (out of 100%).\nSet to -1 to give the player the ability on login.

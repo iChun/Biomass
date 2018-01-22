@@ -1,0 +1,21 @@
+[
+{
+  "modid" : "biomass",
+  "name" : "Biomass",
+  "version" : "${version}",
+  "url" : "http://ichun.me/mods/biomass/",
+  "credits" : "",
+  "authorList": [
+    "iChun"
+  ],
+  "description": "TBD",
+  "logoFile" : "",
+  "updateUrl" : "",
+  "parent" : "",
+  "screenshots": [
+  ],
+  "dependencies": [
+    "forge", "ichunutil"
+  ]
+}
+]
